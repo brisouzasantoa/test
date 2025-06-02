@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Your Online Winner Profile</title>
+    <style>
+        /* PREMIUM COLOR PALETTE */
+        :root {
+            --bg: #0a0a0a; /* Deep black */
+            --card: rgba(255, 214, 102, 0.1); /* Translucent yellow */
+            --text: #f0f0f0; /* Soft white */
+            --text-secondary: #b0b0b0;
+            --accent: #FFD166; /* Golden yellow */
+            --accent-dark: #e6b84c;
+            --option-bg: rgba(255, 255, 255, 0.08);
+            --progress: linear-gradient(90deg, #FFD166, #FF9E1B);
+            --shadow: 0 12px 28px rgba(255, 214, 102, 0.08);
+        }
+        
+        /* RESET AND FONTS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        /* MAIN CONTAINER (Premium Glassmorphism) */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 35px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 214, 102, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* GOLDEN LOADING BAR */
+        .global-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 214, 102, 0.1);
+        }
+        
+        .global-loader-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--progress);
+            transition: width 0.5s ease;
+        }
+        
+        /* HEADER */
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--accent);
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            color: var(--text);
+            text-align: center;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+        
+        /* STYLIZED USER COUNTER */
+        .user-counter {
+            background: rgba(255, 214, 102, 0.1);
+            padding: 10px 18px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+            gap: 10px;
+            color: var(--accent);
+            border: 1px solid rgba(255, 214, 102, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .user-counter span {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        /* QUESTIONS */
+        .question-container {
+            margin: 25px 0;
+            animation: fadeIn 0.5s;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        /* PREMIUM OPTION DESIGN */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option-btn {
+            background: var(--option-bg);
+            border: 1px solid rgba(255, 214, 102, 0.2);
+            color: var(--text);
+            padding: 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 16px;
+            text-align: center;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+        }
+        
+        .option-btn:hover {
+            background: rgba(255, 214, 102, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(255, 214, 102, 0.1);
+            border-color: rgba(255, 214, 102, 0.3);
+        }
+        
+        /* PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin: 35px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--progress);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        /* COUNTDOWN TIMER */
+        .countdown {
+            font-size: 16px;
+            margin: 20px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .countdown span {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        /* RESULT MESSAGE */
+        .result-message {
+            display: none;
+            padding: 30px;
+            background: rgba(255, 214, 102, 0.08);
+            border-radius: 18px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s;
+            border: 1px solid rgba(255, 214, 102, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-message h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .loading-container {
+            margin-top: 25px;
+        }
+        
+        .loading-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: var(--progress);
+            transition: width 0.5s;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* RESPONSIVENESS */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+            
+            .question {
+                font-size: 18px;
+            }
+            
+            .option-btn {
+                padding: 16px;
+                font-size: 15px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- GOLDEN LOADING BAR -->
+    <div class="global-loader">
+        <div class="global-loader-bar" id="global-loader"></div>
+    </div>
+
+    <div class="container">
+        <h1>🎯 WHAT'S YOUR ONLINE WINNER PROFILE?</h1>
+        
+        <!-- PREMIUM USER COUNTER -->
+        <div class="user-counter">
+            <span>👥</span> <span id="user-count">2,587</span> people using now
+        </div>
+        
+        <p class="subtitle">Answer 2 questions and discover the best platforms for you!</p>
+        
+        <div id="quiz">
+            <!-- QUESTION 1 -->
+            <div class="question-container" id="q1">
+                <div class="question">1. How do you prefer to make money online?</div>
+                <div class="options">
+                    <button class="option-btn" onclick="nextQuestion(1)">Clicking on ads (PTC)</button>
+                    <button class="option-btn" onclick="nextQuestion(1)">Collecting cryptocurrencies (Faucets)</button>
+                    <button class="option-btn" onclick="nextQuestion(1)">Tasks that pay in dollars (CPA/Offers)</button>
+                </div>
+            </div>
+            
+            <!-- QUESTION 2 (HIDDEN INITIALLY) -->
+            <div class="question-container" id="q2" style="display: none;">
+                <div class="question">2. How much time can you dedicate per day?</div>
+                <div class="options">
+                    <button class="option-btn" onclick="nextQuestion(2)">Less than 1 hour</button>
+                    <button class="option-btn" onclick="nextQuestion(2)">1-3 hours</button>
+                    <button class="option-btn" onclick="nextQuestion(2)">More than 3 hours (I want to maximize!)</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GOLDEN PROGRESS BAR -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <!-- STYLIZED COUNTDOWN -->
+        <div class="countdown">
+            ⏳ <span id="countdown">15</span> seconds remaining
+        </div>
+        
+        <!-- PREMIUM REDIRECTION MESSAGE -->
+        <div class="result-message" id="result-message">
+            <h2>🎉 CONGRATULATIONS!</h2>
+            <p>We're preparing your personalized list with the best platforms...</p>
+            
+            <div class="loading-container">
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loading-bar"></div>
+                </div>
+                <p style="margin-top: 12px; color: var(--text-secondary);">Redirecting in <span id="redirect-countdown">5</span>s</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURATION ========== //
+        const totalQuestions = 2;
+        let currentQuestion = 1;
+        let userInteracted = false;
+        let countdownInterval;
+        let globalLoaderInterval;
+        
+        // ========== INITIALIZATION ========== //
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start global loading bar
+            animateGlobalLoader();
+            
+            // Start dynamic user counter
+            startUserCounter();
+            
+            // Start countdown (15s)
+            startCountdown(15, 'countdown', () => {
+                if (!userInteracted) showResultMessage();
+            });
+        });
+        
+        // ========== ANIMATIONS ========== //
+        function animateGlobalLoader() {
+            let progress = 0;
+            const loader = document.getElementById('global-loader');
+            
+            globalLoaderInterval = setInterval(() => {
+                progress += 1;
+                loader.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(globalLoaderInterval);
+                    loader.style.width = '0%';
+                    setTimeout(animateGlobalLoader, 500);
+                }
+            }, 50);
+        }
+        
+        function startUserCounter() {
+            const userElement = document.getElementById('user-count');
+            let baseUsers = 2587;
+            let targetUsers = baseUsers + Math.floor(Math.random() * 200);
+            
+            const increment = () => {
+                baseUsers += 1;
+                userElement.textContent = baseUsers.toLocaleString('en-US');
+                
+                if (baseUsers < targetUsers) {
+                    setTimeout(increment, Math.random() * 3000);
+                } else {
+                    // New target after reaching previous one
+                    targetUsers = baseUsers + Math.floor(Math.random() * 200);
+                    setTimeout(increment, 5000);
+                }
+            };
+            
+            increment();
+        }
+        
+        // ========== QUIZ LOGIC ========== //
+        function nextQuestion(q) {
+            userInteracted = true;
+            document.getElementById(`q${q}`).style.display = 'none';
+            currentQuestion++;
+            updateProgressBar();
+            
+            if (currentQuestion <= totalQuestions) {
+                document.getElementById(`q${currentQuestion}`).style.display = 'block';
+                document.getElementById(`q${currentQuestion}`).style.animation = 'fadeIn 0.5s';
+            } else {
+                showResultMessage();
+            }
+        }
+        
+        function updateProgressBar() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+        
+        // ========== REDIRECTION ========== //
+        function showResultMessage() {
+            clearInterval(countdownInterval);
+            document.getElementById('quiz').style.display = 'none';
+            document.querySelector('.countdown').style.display = 'none';
+            document.getElementById('result-message').style.display = 'block';
+            
+            // Loading bar animation
+            let progress = 0;
+            const loadingBar = document.getElementById('loading-bar');
+            const loadingInterval = setInterval(() => {
+                progress += 2;
+                loadingBar.style.width = `${progress}%`;
+                if (progress >= 100) clearInterval(loadingInterval);
+            }, 50);
+            
+            // Redirection countdown (5s)
+            startCountdown(5, 'redirect-countdown', () => {
+                window.location.href = "main.html"; // CHANGE TO YOUR MAIN PAGE
+            });
+        }
+        
+        // ========== COUNTDOWN TIMER ========== //
+        function startCountdown(seconds, elementId, callback) {
+            let timeLeft = seconds;
+            const element = document.getElementById(elementId);
+            element.textContent = timeLeft;
+            
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                element.textContent = timeLeft;
+                
+                if (timeLeft <= 5) {
+                    element.style.color = '#FF9E1B';
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    if (callback) callback();
+                }
+            }, 1000);
+        }
+        
+        // ========== DETECT INTERACTION ========== //
+        document.addEventListener('click', () => userInteracted = true);
+        document.addEventListener('scroll', () => userInteracted = true);
+        document.addEventListener('touchstart', () => userInteracted = true);
+    </script>
+</body>
+</html>
