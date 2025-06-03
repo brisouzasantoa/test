@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        console.log("Index.html carregado!");
+        // Força carregar o JS mesmo se houver erros
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error("Erro global:", message, "em", source, "linha:", lineno);
+        };
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz: Your Online Winner Profile</title>
