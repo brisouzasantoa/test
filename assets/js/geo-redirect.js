@@ -1,28 +1,34 @@
-// Versão simplificada e compatível com seu quiz
-console.log("GeoRedirect: Script carregado!");
-
-const CONFIG = {
-    debug: true,
-    countryMapping: {
-        'BR': ['/test/geo/br/home.html'], // URL corrigida para seu repositório
-        'default': ['/test/geo/global/default.html']
+// Versão 2.0 - Integrado com gateways
+const COUNTRY_GATEWAYS = {
+    'BR': {
+        gateways: ['/test/geo/br/home.html'],
+        params: {
+            src: ['organic_search','social_media'],
+            ref: ['google','direct']
+        }
+    },
+    'IN': {
+        gateways: ['/test/geo/in/offer.html'],
+        params: { ... } 
     }
 };
 
-function redirectToGeoPage() {
-    // Simulação de detecção de país (substitua pela sua API real)
-    const country = 'BR'; // Para teste, force BR. Depois use APIs de geolocalização
+function getRandomGateway(country) {
+    const config = COUNTRY_GATEWAYS[country] || COUNTRY_GATEWAYS['default'];
+    const gateway = config.gateways[Math.floor(Math.random() * config.gateways.length)];
     
-    const targetUrl = CONFIG.countryMapping[country]?.[0] || CONFIG.countryMapping['default'][0];
-    console.log(`Redirecionando para: ${targetUrl}`);
+    const params = new URLSearchParams();
+    Object.entries(config.params).forEach(([key, values]) => {
+        params.set(key, values[Math.floor(Math.random() * values.length)]);
+    });
     
-    // Redireciona após 3s (para testes)
-    setTimeout(() => {
-        window.location.href = targetUrl;
-    }, 3000);
+    return `${gateway}?${params.toString()}`;
 }
 
-// Inicia apenas se não estiver no index.html (para evitar loops)
-if (!window.location.pathname.includes('index.html')) {
-    redirectToGeoPage();
+// Use esta função no redirecionamento
+function safeRedirect() {
+    const country = detectUserCountry(); // Sua função existente
+    setTimeout(() => {
+        window.location.href = getRandomGateway(country);
+    }, Math.random() * 3000 + 2000);
 }
