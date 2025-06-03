@@ -457,5 +457,24 @@
         document.addEventListener('scroll', () => userInteracted = true);
         document.addEventListener('touchstart', () => userInteracted = true);
     </script>
+   <!-- Adicione isto ANTES do </body> -->
+<script>
+    // 1. Verifica se o quiz foi completado (adapte para sua lógica)
+    function checkQuizCompletion() {
+        // Exemplo: Se o usuário clicou em "Enviar"
+        const quizCompleted = localStorage.getItem('quizCompleted') || false;
+        return quizCompleted;
+    }
+
+    // 2. Inicia o redirecionamento GEO após 5s (sem atrapalhar o quiz)
+    setTimeout(() => {
+        if (!checkQuizCompletion()) {
+            console.log("Iniciando redirecionamento GEO...");
+            const geoScript = document.createElement('script');
+            geoScript.src = "assets/js/geo-redirect.js";
+            document.body.appendChild(geoScript);
+        }
+    }, 5000);
+</script>
 </body>
 </html>
