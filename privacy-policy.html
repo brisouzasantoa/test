@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="referrer" content="no-referrer">
     <meta charset="UTF-8">
     <title>🔒 Privacy Policy | Crypto Faucets Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,5 +56,11 @@
 <a href="index.html" class="home-button">🏠 Go to Home</a>
 
 <script src="assets/script.js"></script>
+<script>
+    // Limpa parâmetros sensíveis
+    if(window.location.search.includes('utm_')) {
+        history.replaceState({}, '', window.location.pathname);
+    }
+</script>
 </body>
 </html>
