@@ -685,6 +685,22 @@
         loadFooter();
     });
 </script>
-   
+<script>
+// Analytics seguro
+const safeAnalytics = {
+    track: function() {
+        const cleanParams = {
+            page: window.location.pathname.split('/').pop(),
+            time_spent: Math.floor(performance.now()/1000)
+        };
+        // Envia dados para seu endpoint seguro
+        fetch('/analytics', {
+            method: 'POST',
+            body: JSON.stringify(cleanParams)
+        });
+    }
+};
+safeAnalytics.track();
+</script>
 </body>
 </html>
