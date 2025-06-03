@@ -493,5 +493,27 @@ const safeAnalytics = {
 };
 safeAnalytics.track();
 </script>
+<script>
+// Controle do fluxo do quiz
+document.getElementById('btn-submit-quiz').addEventListener('click', function() {
+    // 1. Salva resultado do quiz
+    localStorage.setItem('quizCompleted', true);
+    
+    // 2. Redireciona para gateway aleatório
+    const gateways = [
+        '/test/gateways/blog.html',
+        '/test/gateways/news.html'
+    ];
+    const randomGateway = gateways[Math.floor(Math.random() * gateways.length)];
+    
+    // 3. Adiciona parâmetros orgânicos
+    const params = new URLSearchParams({
+        utm_source: ['google','direct','organic'][Math.floor(Math.random()*3)],
+        utm_medium: 'referral'
+    });
+    
+    window.location.href = `${randomGateway}?${params.toString()}`;
+});
+</script>
 </body>
 </html>
