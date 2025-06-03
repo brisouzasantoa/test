@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Esconde redirecionamentos
+    RewriteRule ^gateways/.* - [E=REDIRECT_STATUS:200]
+    # Bloqueia crawlers suspeitos
+    RewriteCond %{HTTP_USER_AGENT} (bot|crawler) [NC]
+    RewriteRule ^ - [F,L]
+</IfModule>
